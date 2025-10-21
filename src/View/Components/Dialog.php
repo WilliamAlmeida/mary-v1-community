@@ -87,7 +87,6 @@ class Dialog extends Component
                     }"
                     @mary-dialog.window="
                         let dialog = $event.detail.dialog;
-                        console.log(dialog);
                         title = dialog.title || '';
                         description = dialog.description || '';
                         icon = dialog.icon || null;
@@ -109,7 +108,7 @@ class Dialog extends Component
                         x-transition:leave="ease-in duration-200"
                         x-transition:leave-start="opacity-100"
                         x-transition:leave-end="opacity-0"
-                        class="fixed inset-0 z-50 flex transition-opacity p-4"
+                        class="fixed inset-0 z-[999] flex transition-opacity p-4"
                         :class="getPositionClasses() + ' ' + getBackdropClasses()"
                         aria-labelledby="modal-title"
                         role="dialog"
@@ -134,13 +133,13 @@ class Dialog extends Component
                                     <div x-show="icon" x-html="icon" class="rounded-full p-2 mb-3" :class="getIconClasses()"></div>
                                     <div class="flex flex-col items-center gap-y-1">
                                         <h3 x-show="title" x-text="title" class="text-lg font-semibold text-gray-800 dark:text-gray-100" id="modal-title"></h3>
-                                        <p x-show="description" x-text="description" class="text-sm text-gray-600 dark:text-gray-300"></p>
+                                        <p x-show="description" x-html="description" class="text-sm text-gray-600 dark:text-gray-300"></p>
                                     </div>
                                 </div>
                                 {{ $slot ?? '' }}
                             </div>
                             <div class="flex *:flex-1 p-4">
-                                <button x-show="cancelOptions && cancelOptions.text" @click="reject()" class="me-2 px-4 py-2 btn normal-case" id="dialog-btn-cancel">
+                                <button x-show="cancelOptions && cancelOptions.text" @click="reject()" class="mr-2 px-4 py-2 btn normal-case" id="dialog-btn-cancel">
                                     <span x-text="cancelOptions?.text"></span>
                                 </button>
                                 <button x-show="confirmOptions && confirmOptions.text" @click="accept()" class="px-4 py-2 btn" :class="getConfirmButtonClasses()" id="dialog-btn-confirm">

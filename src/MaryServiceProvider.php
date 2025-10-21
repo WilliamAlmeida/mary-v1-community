@@ -78,6 +78,8 @@ use Mary\View\Components\TimelineItem;
 use Mary\View\Components\Toast;
 use Mary\View\Components\Dialog;
 use Mary\View\Components\Toggle;
+use Mary\View\Components\InputMaskable;
+use Mary\View\Components\Label;
 
 class MaryServiceProvider extends ServiceProvider
 {
@@ -115,6 +117,9 @@ class MaryServiceProvider extends ServiceProvider
         Blade::component('mary-menu-item', MenuItem::class);
         Blade::component('mary-header', Header::class);
         Blade::component('mary-pagination', Pagination::class);
+        // Novo componente InputMaskable
+        Blade::component('mary-input-maskable', InputMaskable::class);
+        Blade::component('mary-label', Label::class);
 
         $prefix = config('mary.prefix');
 
@@ -190,6 +195,8 @@ class MaryServiceProvider extends ServiceProvider
         Blade::component($prefix . 'dialog', Dialog::class);
         Blade::component($prefix . 'toggle', Toggle::class);
         Blade::component($prefix . 'carousel', Carousel::class);
+        Blade::component($prefix . 'input-maskable', InputMaskable::class);
+        Blade::component($prefix . 'label', Label::class);
     }
 
     public function registerBladeDirectives(): void

@@ -22,6 +22,7 @@ class Code extends Component
         public string $height = '200px',
         public string $lineHeight = '2',
         public bool $printMargin = false,
+        public bool $readonly = false,
     ) {
         $this->uuid = "mary" . md5(serialize($this)) . $id;
     }
@@ -60,12 +61,12 @@ class Code extends Component
                                 (this.class == '{{ $darkClass }}')
                                     ? this.editor.setTheme('ace/theme/{{ $darkTheme }}')
                                     : this.editor.setTheme('ace/theme/{{ $lightTheme }}');
-
                                 // More settings
                                 this.editor.setOptions({
                                     enableBasicAutocompletion: true,
                                     enableLiveAutocompletion: true,
                                     enableSnippets: true,
+                                    readOnly: {{ $readonly }},
                                 });
 
                                 // Initial value

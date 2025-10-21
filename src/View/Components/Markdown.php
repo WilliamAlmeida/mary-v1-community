@@ -15,15 +15,12 @@ class Markdown extends Component
     public function __construct(
         public ?string $id = null,
         public ?string $label = null,
-        public ?string $hint = null,
-        public ?string $hintClass = 'fieldset-label',
         public ?string $disk = 'public',
         public ?string $folder = 'markdown',
         public ?array $config = [],
-
         // Validations
         public ?string $errorField = null,
-        public ?string $errorClass = 'text-error',
+        public ?string $errorClass = 'text-red-500 label-text-alt p-1',
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
     ) {
@@ -84,97 +81,103 @@ class Markdown extends Component
     {
         return <<<'HTML'
             <div>
-                <fieldset class="fieldset py-0">
-                    {{-- STANDARD LABEL --}}
-                    @if($label)
-                        <legend class="fieldset-legend mb-0.5">
+                @if($label)
+                    <label for="{{ $uuid }}" class="pt-0 label label-text font-semibold">
+                        <span>
                             {{ $label }}
-
                             @if($attributes->get('required'))
                                 <span class="text-error">*</span>
                             @endif
-                        </legend>
-                    @endif
+                        </span>
+                    </label>
+                @endif
 
-                    {{-- EDITOR --}}
-                    <div
-                        x-data="
-                            {
-                                editor: null,
-                                value: @entangle($attributes->wire('model')),
-                                uploadUrl: '{{ $uploadUrl }}?disk={{ $disk }}&folder={{ $folder }}&_token={{ csrf_token() }}',
-                                uploading: false,
-                                init() {
-                                    this.initEditor()
-
-                                    // Handles a case where people try to change contents on the fly from Livewire methods
-                                    this.$watch('value', (newValue) => {
-                                        if (newValue !== this.editor.value()) {
-                                            this.value = newValue || ''
-                                            this.destroyEditor()
-                                            this.initEditor()
+                <div
+                    x-data="
+                        {
+                            editor: null,
+                            value: @entangle($attributes->wire('model')),
+                            uploadUrl: '{{ $uploadUrl }}?disk={{ $disk }}&folder={{ $folder }}&_token={{ csrf_token() }}',
+                            uploading: false,
+                            init() {
+                                this.initEditor();
+                                // Handles a case where people try to change contents on the fly from Livewire methods
+                                this.$watch('value', (newValue) => {
+                                    if (newValue !== this.editor.value()) {
+                                        this.value = newValue || '';
+                                        this.destroyEditor();
+                                        this.initEditor();
+                                    }
+                                });
+                            },
+                            destroyEditor() {
+                                this.editor.toTextArea();
+                                this.editor = null;
+                            },
+                            initEditor() {
+                                this.editor = new EasyMDE({
+                                    {{ $setup() }},
+                                    element: $refs.markdown{{ $uuid }},
+                                    initialValue: this.value ?? '',
+                                    imageUploadFunction: (file, onSuccess, onError) => {
+                                        if (file.type.split('/')[0] !== 'image') {
+                                            return onError('File must be an image.');
                                         }
-                                    })
-                                },
-                                destroyEditor() {
-                                    this.editor.toTextArea();
-                                    this.editor = null
-                                },
-                                initEditor() {
-                                    this.editor = new EasyMDE({
-                                            {{ $setup() }},
-                                            element: $refs.markdown{{ $uuid }},
-                                            initialValue: this.value ?? '',
-                                            imageUploadFunction: (file, onSuccess, onError) => {
-                                                if (file.type.split('/')[0] !== 'image') {
-                                                    return onError('File must be an image.');
-                                                }
-
-                                                var data = new FormData()
-                                                data.append('file', file)
-
-                                                this.uploading = true
-
-                                                fetch(this.uploadUrl, { method: 'POST', body: data })
-                                                   .then(response => response.json())
-                                                   .then(data => onSuccess(data.location))
-                                                   .catch((err) => onError('Error uploading image!'))
-                                                   .finally(() => this.uploading = false)
-                                            }
-                                        })
-
-                                    this.editor.codemirror.on('change', () => this.value = this.editor.value())
-                                }
-                            }"
-                        wire:ignore
-                        x-on:livewire:navigating.window="destroyEditor()"
-                    >
-                        <div class="relative disabled text-base" :class="uploading && 'pointer-events-none opacity-50'">
-                            <textarea id="{{ $uuid }}" x-ref="markdown{{ $uuid }}"></textarea>
-
-                            <div class="absolute top-1/2 start-1/2 !opacity-100 text-center hidden" :class="uploading && '!block'">
-                                <div>Uploading</div>
-                                <div class="loading loading-dots"></div>
-                            </div>
+                                        var data = new FormData();
+                                        data.append('file', file);
+                                        this.uploading = true;
+                                        fetch(this.uploadUrl, { method: 'POST', body: data })
+                                            .then(response => response.json())
+                                            .then(data => onSuccess(data.location))
+                                            .catch((err) => onError('Error uploading image!'))
+                                            .finally(() => this.uploading = false);
+                                    }
+                                });
+                                this.editor.codemirror.on('change', () => this.value = this.editor.value());
+                            },
+                            insertAtCursor(value) {
+                                const codemirror = this.editor.codemirror;
+                                const doc = codemirror.getDoc();
+                                const cursor = doc.getCursor();
+                                doc.replaceRange(value, cursor);
+                            },
+                            replaceAtSelection(value) {
+                                const codemirror = this.editor.codemirror;
+                                const doc = codemirror.getDoc();
+                                doc.replaceSelection(value);
+                            },
+                            insertAtSelectionStartAndEnd(startValue, endValue) {
+                                const codemirror = this.editor.codemirror;
+                                const doc = codemirror.getDoc();
+                                const selection = doc.getSelection();
+                                const newValue = `${startValue}${selection}${endValue}`;
+                                doc.replaceSelection(newValue);
+                            },
+                        }"
+                    wire:ignore
+                    @inserteditor.window="insertAtCursor($event.detail)"
+                    @replaceeditor.window="replaceAtSelection($event.detail)"
+                    @inserteditorstartandend.window="insertAtSelectionStartAndEnd($event.detail.start, $event.detail.end)"
+                    x-on:livewire:navigating.window="destroyEditor()"
+                >
+                    <div class="relative disabled text-base" :class="uploading && 'pointer-events-none opacity-50'">
+                        <textarea id="{{ $uuid }}" x-ref="markdown{{ $uuid }}"></textarea>
+                        <div class="absolute top-1/2 start-1/2 !opacity-100 text-center hidden" :class="uploading && '!block'">
+                            <div>Uploading</div>
+                            <div class="loading loading-dots"></div>
                         </div>
                     </div>
+                </div>
 
-                    {{-- ERROR --}}
-                    @if(!$omitError && $errors->has($errorFieldName()))
-                        @foreach($errors->get($errorFieldName()) as $message)
-                            @foreach(Arr::wrap($message) as $line)
-                                <div class="{{ $errorClass }}" x-class="text-error">{{ $line }}</div>
-                                @break($firstErrorOnly)
-                            @endforeach
+                @if(!$omitError && $errors->has($errorFieldName()))
+                    @foreach($errors->get($errorFieldName()) as $message)
+                        @foreach(Arr::wrap($message) as $line)
+                            <div class="{{ $errorClass }}" x-classes="text-red-500 label-text-alt p-1">{{ $line }}</div>
                             @break($firstErrorOnly)
                         @endforeach
-                    @endif
-
-                    {{-- HINT --}}
-                    @if($hint)
-                        <div class="{{ $hintClass }}" x-classes="fieldset-label">{{ $hint }}</div>
-                    @endif
-                </fieldset>
+                        @break($firstErrorOnly)
+                    @endforeach
+                @endif
             </div>
             HTML;
     }
