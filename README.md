@@ -1,79 +1,64 @@
 <p align="center"><img width="200" src="https://github.com/robsontenorio/mary-ui.com/blob/main/public/mary.png?raw=true"></p>
 
 <p align="center">
-    <a href="https://packagist.org/packages/robsontenorio/mary">
-        <img src="https://img.shields.io/packagist/dt/robsontenorio/mary?cacheSeconds=60">
+    <!-- Badges for mary-v1-community (update the URLs if/when published on Packagist) -->
+    <a href="#">
+        <img src="https://img.shields.io/badge/downloads-community--maintained-lightgrey" alt="Community Maintained">
     </a>
-    <a href="https://packagist.org/packages/robsontenorio/mary">
-        <img src="https://img.shields.io/packagist/v/robsontenorio/mary?label=stable&color=blue&cacheSeconds=60">
+    <a href="#">
+        <img src="https://img.shields.io/badge/stable-v1-blue" alt="Stable v1">
     </a>
-    <a href="https://packagist.org/packages/robsontenorio/mary">
-        <img src="https://poser.pugx.org/robsontenorio/mary/license.svg">
+    <a href="/license.md">
+        <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License">
     </a>
 </p>
 
-## Introduction
 
-The maryUI package is a set of Gorgeous UI components for Livewire powered by daisyUI and Tailwind.
+## mary-v1-community
 
-## Official Documentation
+This repository is an independent, community-maintained continuation of the original MaryUI v1 project. It preserves and extends the classic v1 branch after official support was discontinued, ensuring ongoing updates, bug fixes, and compatibility for users who rely on the v1 codebase.
 
-You can read the official documentation on the [maryUI website](https://mary-ui.com).
+mary-v1-community provides a set of beautiful UI components for Livewire, powered by daisyUI and Tailwind CSS, based on the original MaryUI v1 foundation.
 
-## Sponsor
 
-Let's keep pushing it, [sponsor me](https://github.com/sponsors/robsontenorio) ❤️
+## Documentation
 
-## Discord
+Refer to the [maryUI website](https://mary-ui.com) for the original documentation. Community updates and new documentation will be provided here as the project evolves.
 
-Come to say hello on [maryUI Discord](https://discord.gg/c2Dv8T2X2s)
 
-## Follow me
 
-[@robsontenorio](https://twitter.com/robsontenorio)
 
 ## Contributing
 
-Clone the repository into some folder **inside your app**.
+Contributions are welcome! If you want to help maintain or improve mary-v1-community, please open issues or pull requests.
 
-```bash
-git clone git@github.com:robsontenorio/mary.git
-```
+To use this package locally during development, clone this repository and set up a local path repository in your app's `composer.json`:
 
-Change `composer.json` from **your app**
-
-<!-- @formatter:off -->
 ```json
-"minimum-stability": "dev", // <- change to "dev"
-
-// Add this
 "repositories": {
-    "robsontenorio/mary": {
-        "type": "path",
-        "url": "/path/to/mary", // <- change the path
-        "options": {
-          "symlink": true
+        "mary-v1-community": {
+                "type": "path",
+                "url": "/path/to/mary-v1-community",
+                "options": {
+                    "symlink": true
+                }
         }
-    }
 }
 ```
-<!-- @formatter:on -->
 
-
-Require the package again for local symlink.
+Then require the package:
 
 ```bash
-composer require robsontenorio/mary
+composer require williamalmeida/mary-v1-community
 ```
 
-Start the dev server.
+Start the dev server:
 
 ```bash
 yarn dev
 ```
 
+
 ## License
 
-<a name="license"></a>
-
-MaryUI is open-sourced software licensed under the [MIT license](/license.md).
+mary-v1-community is open-sourced software licensed under the [MIT license](/license.md).
