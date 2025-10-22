@@ -13,10 +13,9 @@ class Stat extends Component
     public string $tooltipPosition = 'lg:tooltip-top';
 
     public function __construct(
-        public ?string $id = null,
         public ?string $value = null,
         public ?string $icon = null,
-        public ?string $color = '',
+        public ?string $color = 'text-primary',
         public ?string $title = null,
         public ?string $description = null,
         public ?string $tooltip = null,
@@ -25,7 +24,7 @@ class Stat extends Component
         public ?string $tooltipBottom = null,
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
         $this->tooltip = $this->tooltip ?? $this->tooltipLeft ?? $this->tooltipRight ?? $this->tooltipBottom;
         $this->tooltipPosition = $this->tooltipLeft ? 'lg:tooltip-left' : ($this->tooltipRight ? 'lg:tooltip-right' : ($this->tooltipBottom ? 'lg:tooltip-bottom' : 'lg:tooltip-top'));
     }
@@ -49,7 +48,7 @@ class Stat extends Component
 
                         <div class="text-left rtl:text-right">
                             @if($title)
-                                <div class="text-xs text-base-content/50 whitespace-nowrap">{{ $title }}</div>
+                                <div class="text-xs text-gray-500 whitespace-nowrap">{{ $title }}</div>
                             @endif
 
                             <div class="font-black text-xl">{{ $value ?? $slot }}</div>

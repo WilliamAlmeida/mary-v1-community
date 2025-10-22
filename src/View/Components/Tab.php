@@ -12,14 +12,12 @@ class Tab extends Component
     public string $uuid;
 
     public function __construct(
-        public ?string $id = null,
         public ?string $name = null,
         public ?string $label = null,
         public ?string $icon = null,
         public bool $disabled = false,
-        public bool $hidden = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function tabLabel(string $label): string
@@ -54,11 +52,11 @@ class Tab extends Component
     {
         return <<<'HTML'
                     <a
-                        class="hidden tab"
+                        class="hidden"
                         :class="{ 'tab-active': selected === '{{ $name }}' }"
                         data-name="{{ $name }}"
                         x-init="
-                                const newItem = { name: '{{ $name }}', label: {{ json_encode($tabLabel($label)) }}, disabled: {{ $disabled ? 'true' : 'false' }}, hidden: {{ $hidden ? 'true' : 'false' }} };
+                                const newItem = { name: '{{ $name }}', label: {{ json_encode($tabLabel($label)) }}, disabled: {{ $disabled ? 'true' : 'false' }} };
                                 const index = tabs.findIndex(item => item.name === '{{ $name }}');
                                 index !== -1 ? tabs[index] = newItem : tabs.push(newItem);
 

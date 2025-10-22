@@ -19,7 +19,6 @@ class Alert extends Component
      * @slot  mixed  $actions  Slots for actionable elements like buttons or links.
      */
     public function __construct(
-        public ?string $id = null,
         public ?string $title = null,
         public ?string $icon = null,
         public ?string $description = null,
@@ -29,12 +28,12 @@ class Alert extends Component
         // Slots
         public mixed $actions = null
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function render(): View|Closure|string
     {
-        return <<<'BLADE'
+        return <<<'HTML'
                 <div
                     wire:key="{{ $uuid }}"
                     {{ $attributes->whereDoesntStartWith('class') }}
@@ -42,12 +41,12 @@ class Alert extends Component
                     x-data="{ show: true }" x-show="show"
                 >
                     @if($icon)
-                        <x-mary-icon :name="$icon" class="self-start mt-1" />
+                        <x-mary-icon :name="$icon" />
                     @endif
 
                     @if($title)
                         <div>
-                            <div @class(["font-bold" => $description])>{{ $title }}</div>
+                            <div class="font-bold">{{ $title }}</div>
                             <div class="text-xs">{{ $description }}</div>
                         </div>
                     @else
@@ -59,9 +58,9 @@ class Alert extends Component
                     </div>
 
                     @if($dismissible)
-                        <x-mary-button icon="o-x-mark" @click="show = false" class="btn-xs btn-circle btn-ghost static self-start end-0" />
+                        <x-mary-button icon="o-x-mark" @click="show = false" class="btn-xs btn-ghost self-start justify-self-end p-0 absolute sm:static -order-1 sm:order-none" />
                     @endif
                 </div>
-            BLADE;
+            HTML;
     }
 }

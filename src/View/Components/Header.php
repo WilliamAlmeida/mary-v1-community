@@ -17,11 +17,7 @@ class Header extends Component
         public ?bool $separator = false,
         public ?string $progressIndicator = null,
         public ?bool $withAnchor = false,
-        public ?string $size = 'text-2xl',
-
-        // Icon
-        public ?string $icon = null,
-        public ?string $iconClasses = null,
+        public ?string $size = 'text-4xl',
 
         // Slots
         public mixed $middle = null,
@@ -45,16 +41,12 @@ class Header extends Component
                 <div id="{{ $anchor }}" {{ $attributes->class(["mb-10", "mary-header-anchor" => $withAnchor]) }}>
                     <div class="flex flex-wrap gap-5 justify-between items-center">
                         <div>
-                            <div @class(["flex", "items-center", "$size font-extrabold", is_string($title) ? '' : $title?->attributes->get('class') ]) >
+                            <div @class(["$size font-extrabold", is_string($title) ? '' : $title?->attributes->get('class') ]) >
                                 @if($withAnchor)
                                     <a href="#{{ $anchor }}">
                                 @endif
-                                
-                                @if($icon)
-                                    <x-icon name="{{ $icon }}" class="{{ $iconClasses }}" />
-                                @endif
 
-                                <span @class(["ml-2" => $icon])>{{ $title }}</span>
+                                {{ $title }}
 
                                 @if($withAnchor)
                                     </a>
@@ -62,7 +54,7 @@ class Header extends Component
                             </div>
 
                             @if($subtitle)
-                                <div @class(["text-base-content/50 text-sm mt-1", is_string($subtitle) ? '' : $subtitle?->attributes->get('class') ]) >
+                                <div @class(["text-gray-500 text-sm mt-1", is_string($subtitle) ? '' : $subtitle?->attributes->get('class') ]) >
                                     {{ $subtitle }}
                                 </div>
                             @endif
@@ -75,19 +67,19 @@ class Header extends Component
                                 </div>
                             </div>
                         @endif
-
+                        
                         <div @class(["flex items-center gap-3", is_string($actions) ? '' : $actions?->attributes->get('class') ]) >
                             {{ $actions}}
                         </div>
                     </div>
 
                     @if($separator)
-                        <hr class="border-t-[length:var(--border)] border-base-content/10 mt-3" />
+                        <hr class="my-5" />
 
                         @if($progressIndicator)
-                            <div class="h-0.5 -mt-4 mb-4">
+                            <div class="h-0.5 -mt-9 mb-9">
                                 <progress
-                                    class="progress progress-primary w-full h-[var(--border)]"
+                                    class="progress progress-primary w-full h-0.5 dark:h-1"
                                     wire:loading
 
                                     @if($progressTarget())

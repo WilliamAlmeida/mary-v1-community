@@ -11,10 +11,9 @@ class File extends Component
     public string $uuid;
 
     public function __construct(
-        public ?string $id = null,
         public ?string $label = null,
         public ?string $hint = null,
-        public ?string $hintClass = 'fieldset-label',
+        public ?string $hintClass = 'label-text-alt text-gray-400 py-1 pb-0',
         public ?bool $hideProgress = false,
         public ?bool $cropAfterChange = false,
         public ?string $changeText = "Change",
@@ -23,15 +22,14 @@ class File extends Component
         public ?string $cropSaveText = "Crop",
         public ?array $cropConfig = [],
         public ?string $cropMimeType = "image/png",
-
         // Validations
         public ?string $errorField = null,
-        public ?string $errorClass = 'text-error',
+        public ?string $errorClass = 'text-red-500 label-text-alt p-1',
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function modelName(): ?string
@@ -136,99 +134,100 @@ class File extends Component
 
                     {{ $attributes->whereStartsWith('class') }}
                 >
-                    <fieldset class="fieldset py-0">
-                        {{-- STANDARD LABEL --}}
-                        @if($label)
-                            <legend class="fieldset-legend mb-0.5">
+                    <!-- STANDARD LABEL -->
+                    @if($label)
+                        <label for="{{ $uuid }}" class="pt-0 label label-text font-semibold">
+                            <span>
                                 {{ $label }}
 
                                 @if($attributes->get('required'))
                                     <span class="text-error">*</span>
                                 @endif
-                            </legend>
-                        @endif
+                            </span>
+                        </label>
+                    @endif
 
-                        {{-- PROGRESS BAR  --}}
-                        @if(! $hideProgress && $slot->isEmpty())
+                    <!-- PROGRESS BAR  -->
+                    @if(! $hideProgress && $slot->isEmpty())
+                        <div class="h-1 -mt-5 mb-5">
                             <progress
                                 x-cloak
-                                max="100"
-                                :value="progress"
                                 :class="!processing && 'hidden'"
-                                class="progress h-1 absolute -mt-2 w-56"></progress>
-                        @endif
+                                :value="progress"
+                                max="100"
+                                class="progress progress-success h-1 w-56"></progress>
+                        </div>
+                    @endif
 
-                        {{-- INPUT --}}
-                        <input
-                            id="{{ $uuid }}"
-                            type="file"
-                            x-ref="file"
-                            @change="refreshImage()"
+                    <!-- FILE INPUT -->
+                    <input
+                        id="{{ $uuid }}"
+                        type="file"
+                        x-ref="file"
+                        @change="refreshImage()"
 
-                            {{
-                                $attributes->whereDoesntStartWith('class')->class([
-                                    "file-input w-full",
-                                    "!file-input-error" => $errorFieldName() && $errors->has($errorFieldName()) && !$omitError,
-                                    "hidden" => $slot->isNotEmpty()
-                                ])
-                            }}
-                        />
+                        {{
+                            $attributes->whereDoesntStartWith('class')->class([
+                                "file-input file-input-bordered file-input-primary",
+                                "hidden" => $slot->isNotEmpty()
+                            ])
+                        }}
+                    />
 
-                        @if ($slot->isNotEmpty())
-                            <!-- PREVIEW AREA -->
-                            <div x-ref="preview" class="relative flex">
-                                <div
-                                    wire:ignore
-                                    @click="change()"
-                                    :class="processing && 'opacity-50 pointer-events-none'"
-                                    class="cursor-pointer hover:scale-105 transition-all tooltip"
-                                    data-tip="{{ $changeText }}"
-                                >
-                                    {{ $slot }}
-                                </div>
-                                <!-- PROGRESS -->
-                                <div
-                                    x-cloak
-                                    :style="`--value:${progress}; --size:1.5rem; --thickness: 4px;`"
-                                    :class="!processing && 'hidden'"
-                                    class="radial-progress text-success absolute top-5 start-5 bg-neutral"
-                                    role="progressbar"
-                                ></div>
+                    @if ($slot->isNotEmpty())
+                        <!-- PREVIEW AREA -->
+                        <div x-ref="preview" class="relative flex">
+                            <div
+                                wire:ignore
+                                @click="change()"
+                                :class="processing && 'opacity-50 pointer-events-none'"
+                                class="cursor-pointer hover:scale-105 transition-all tooltip"
+                                data-tip="{{ $changeText }}"
+                            >
+                                {{ $slot }}
                             </div>
+                            <!-- PROGRESS -->
+                            <div
+                                x-cloak
+                                :style="`--value:${progress}; --size:1.5rem; --thickness: 4px;`"
+                                :class="!processing && 'hidden'"
+                                class="radial-progress text-success absolute top-5 start-5 bg-neutral"
+                                role="progressbar"
+                            ></div>
+                        </div>
 
-                            <!-- CROP MODAL -->
-                            <div @click.prevent="" x-ref="crop" wire:ignore>
-                                <x-mary-modal id="maryCrop{{ $uuid }}" x-ref="maryCrop" :title="$cropTitleText" separator class="backdrop-blur-sm" persistent @keydown.window.esc.prevent="" without-trap-focus>
-                                    <img src="" />
-                                    <x-slot:actions>
-                                        <x-mary-button :label="$cropCancelText" @click="close()" />
-                                        <x-mary-button :label="$cropSaveText" class="btn-primary" @click="save()" ::disabled="processing" />
-                                    </x-slot:actions>
-                                </x-mary-modal>
-                            </div>
-                        @endif
+                        <!-- CROP MODAL -->
+                        <div @click.prevent="" x-ref="crop" wire:ignore>
+                            <x-mary-modal id="maryCrop{{ $uuid }}" x-ref="maryCrop" :title="$cropTitleText" separator class="backdrop-blur-sm" persistent @keydown.window.esc.prevent="" without-trap-focus>
+                                <img src="" />
+                                <x-slot:actions>
+                                    <x-mary-button :label="$cropCancelText" @click="close()" />
+                                    <x-mary-button :label="$cropSaveText" class="btn-primary" @click="save()" ::disabled="processing" />
+                                </x-slot:actions>
+                            </x-mary-modal>
+                        </div>
+                    @endif
 
-                        {{-- ERROR --}}
-                        @if(!$omitError && $errors->has($errorFieldName()))
-                            @foreach($errors->get($errorFieldName()) as $message)
-                                @foreach(Arr::wrap($message) as $line)
-                                    <div class="{{ $errorClass }}" x-classes="text-error">{{ $line }}</div>
-                                    @break($firstErrorOnly)
-                                @endforeach
+                    <!-- ERROR -->
+                    @if(!$omitError && $errors->has($errorFieldName()))
+                        @foreach($errors->get($errorFieldName()) as $message)
+                            @foreach(Arr::wrap($message) as $line)
+                                <div class="{{ $errorClass }}" x-classes="text-red-500 label-text-alt p-1">{{ $line }}</div>
                                 @break($firstErrorOnly)
                             @endforeach
-                        @endif
+                            @break($firstErrorOnly)
+                        @endforeach
+                    @endif
 
-                        {{-- MULTIPLE --}}
-                        @error($modelName().'.*')
-                            <div class="text-error" x-classes="text-error">{{ $message }}</div>
-                        @enderror
+                    <!-- MULTIPLE -->
+                    @error($modelName().'.*')
+                        <div class="text-red-500 label-text-alt p-1 pt-2">{{ $message }}</div>
+                    @enderror
 
-                        {{-- HINT --}}
-                        @if($hint)
-                            <div class="{{ $hintClass }}" x-classes="fieldset-label">{{ $hint }}</div>
-                        @endif
-                    </fieldset>
+                    <!-- HINT -->
+                    @if($hint)
+                        <div class="{{ $hintClass }}" x-classes="label-text-alt text-gray-400 py-1 pb-0">{{ $hint }}</div>
+                    @endif
                 </div>
             HTML;
     }

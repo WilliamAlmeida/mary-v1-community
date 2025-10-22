@@ -13,7 +13,6 @@ class Markdown extends Component
     public string $uploadUrl;
 
     public function __construct(
-        public ?string $id = null,
         public ?string $label = null,
         public ?string $disk = 'public',
         public ?string $folder = 'markdown',
@@ -24,7 +23,7 @@ class Markdown extends Component
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
         $this->uploadUrl = route('mary.upload', absolute: false);
     }
 
@@ -46,23 +45,10 @@ class Markdown extends Component
             'uploadImage' => true,
             'imageAccept' => 'image/png, image/jpeg, image/gif, image/avif',
             'toolbar' => [
-                'heading',
-                'bold',
-                'italic',
-                'strikethrough',
-                '|',
-                'code',
-                'quote',
-                'unordered-list',
-                'ordered-list',
-                'horizontal-rule',
-                '|',
-                'link',
-                'upload-image',
-                'table',
-                '|',
-                'preview',
-                'side-by-side'
+                'heading', 'bold', 'italic', 'strikethrough', '|',
+                'code', 'quote', 'unordered-list', 'ordered-list', 'horizontal-rule', '|',
+                'link', 'upload-image', 'table', '|',
+                'preview', 'side-by-side'
             ],
         ], $this->config);
 
@@ -81,10 +67,12 @@ class Markdown extends Component
     {
         return <<<'HTML'
             <div>
+                <!-- STANDARD LABEL -->
                 @if($label)
                     <label for="{{ $uuid }}" class="pt-0 label label-text font-semibold">
                         <span>
                             {{ $label }}
+
                             @if($attributes->get('required'))
                                 <span class="text-error">*</span>
                             @endif
@@ -92,6 +80,7 @@ class Markdown extends Component
                     </label>
                 @endif
 
+                <!-- EDITOR -->
                 <div
                     x-data="
                         {
@@ -100,75 +89,62 @@ class Markdown extends Component
                             uploadUrl: '{{ $uploadUrl }}?disk={{ $disk }}&folder={{ $folder }}&_token={{ csrf_token() }}',
                             uploading: false,
                             init() {
-                                this.initEditor();
+                                this.initEditor()
+
                                 // Handles a case where people try to change contents on the fly from Livewire methods
                                 this.$watch('value', (newValue) => {
                                     if (newValue !== this.editor.value()) {
-                                        this.value = newValue || '';
-                                        this.destroyEditor();
-                                        this.initEditor();
+                                        this.value = newValue || ''
+                                        this.destroyEditor()
+                                        this.initEditor()
                                     }
-                                });
+                                })
                             },
                             destroyEditor() {
                                 this.editor.toTextArea();
-                                this.editor = null;
+                                this.editor = null
                             },
                             initEditor() {
                                 this.editor = new EasyMDE({
-                                    {{ $setup() }},
-                                    element: $refs.markdown{{ $uuid }},
-                                    initialValue: this.value ?? '',
-                                    imageUploadFunction: (file, onSuccess, onError) => {
-                                        if (file.type.split('/')[0] !== 'image') {
-                                            return onError('File must be an image.');
+                                        {{ $setup() }},
+                                        element: $refs.markdown{{ $uuid }},
+                                        initialValue: this.value ?? '',
+                                        imageUploadFunction: (file, onSuccess, onError) => {
+                                            if (file.type.split('/')[0] !== 'image') {
+                                                return onError('File must be an image.');
+                                            }
+
+                                            var data = new FormData()
+                                            data.append('file', file)
+
+                                            this.uploading = true
+
+                                            fetch(this.uploadUrl, { method: 'POST', body: data })
+                                               .then(response => response.json())
+                                               .then(data => onSuccess(data.location))
+                                               .catch((err) => onError('Error uploading image!'))
+                                               .finally(() => this.uploading = false)
                                         }
-                                        var data = new FormData();
-                                        data.append('file', file);
-                                        this.uploading = true;
-                                        fetch(this.uploadUrl, { method: 'POST', body: data })
-                                            .then(response => response.json())
-                                            .then(data => onSuccess(data.location))
-                                            .catch((err) => onError('Error uploading image!'))
-                                            .finally(() => this.uploading = false);
-                                    }
-                                });
-                                this.editor.codemirror.on('change', () => this.value = this.editor.value());
-                            },
-                            insertAtCursor(value) {
-                                const codemirror = this.editor.codemirror;
-                                const doc = codemirror.getDoc();
-                                const cursor = doc.getCursor();
-                                doc.replaceRange(value, cursor);
-                            },
-                            replaceAtSelection(value) {
-                                const codemirror = this.editor.codemirror;
-                                const doc = codemirror.getDoc();
-                                doc.replaceSelection(value);
-                            },
-                            insertAtSelectionStartAndEnd(startValue, endValue) {
-                                const codemirror = this.editor.codemirror;
-                                const doc = codemirror.getDoc();
-                                const selection = doc.getSelection();
-                                const newValue = `${startValue}${selection}${endValue}`;
-                                doc.replaceSelection(newValue);
-                            },
+                                    })
+
+                                this.editor.codemirror.on('change', () => this.value = this.editor.value())
+                            }
                         }"
                     wire:ignore
-                    @inserteditor.window="insertAtCursor($event.detail)"
-                    @replaceeditor.window="replaceAtSelection($event.detail)"
-                    @inserteditorstartandend.window="insertAtSelectionStartAndEnd($event.detail.start, $event.detail.end)"
                     x-on:livewire:navigating.window="destroyEditor()"
                 >
-                    <div class="relative disabled text-base" :class="uploading && 'pointer-events-none opacity-50'">
+                    <div class="relative disabled" :class="uploading && 'pointer-events-none opacity-50'">
                         <textarea id="{{ $uuid }}" x-ref="markdown{{ $uuid }}"></textarea>
+
                         <div class="absolute top-1/2 start-1/2 !opacity-100 text-center hidden" :class="uploading && '!block'">
                             <div>Uploading</div>
                             <div class="loading loading-dots"></div>
                         </div>
                     </div>
+
                 </div>
 
+                <!-- ERROR -->
                 @if(!$omitError && $errors->has($errorFieldName()))
                     @foreach($errors->get($errorFieldName()) as $message)
                         @foreach(Arr::wrap($message) as $line)
@@ -178,6 +154,7 @@ class Markdown extends Component
                         @break($firstErrorOnly)
                     @endforeach
                 @endif
+
             </div>
             HTML;
     }

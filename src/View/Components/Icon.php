@@ -5,8 +5,8 @@ namespace Mary\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
-use Illuminate\Support\Stringable;
 use Illuminate\View\Component;
+use Illuminate\Support\Stringable;
 
 class Icon extends Component
 {
@@ -14,10 +14,9 @@ class Icon extends Component
 
     public function __construct(
         public string $name,
-        public ?string $id = null,
         public ?string $label = null
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function icon(): string|Stringable
@@ -35,19 +34,26 @@ class Icon extends Component
 
     public function render(): View|Closure|string
     {
-        return <<<'BLADE'
+        return <<<'HTML'
                 @if(strlen($label ?? '') > 0)
                     <div class="inline-flex items-center gap-1">
                 @endif
-                    <x-svg :name="$icon()" {{ $attributes->class(['inline', 'w-5 h-5' => !Str::contains($attributes->get('class') ?? '', ['w-', 'h-']) ]) }}
-                    />
+                        <x-svg
+                            :name="$icon()"
+                            {{
+                                $attributes->class([
+                                    'inline',
+                                    'w-5 h-5' => !Str::contains($attributes->get('class') ?? '', ['w-', 'h-'])
+                                ])
+                             }}
+                        />
 
-                @if(strlen($label ?? '') > 0)
-                        <div class="{{ $labelClasses() }}">
-                            {{ $label }}
+                    @if(strlen($label ?? '') > 0)
+                            <div class="{{ $labelClasses() }}">
+                                {{ $label }}
+                            </div>
                         </div>
-                    </div>
-                @endif
-            BLADE;
+                    @endif
+            HTML;
     }
 }

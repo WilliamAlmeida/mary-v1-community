@@ -11,7 +11,6 @@ class Dropdown extends Component
     public string $uuid;
 
     public function __construct(
-        public ?string $id = null,
         public ?string $label = null,
         public ?string $icon = 'o-chevron-down',
         public ?bool $right = false,
@@ -20,7 +19,7 @@ class Dropdown extends Component
         // Slots
         public mixed $trigger = null
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function render(): View|Closure|string
@@ -44,7 +43,7 @@ class Dropdown extends Component
                     </summary>
                 @else
                     <!-- DEFAULT TRIGGER -->
-                    <summary x-ref="button" @click.prevent="open = !open" {{ $attributes->class(["btn"]) }}>
+                    <summary x-ref="button" @click.prevent="open = !open" {{ $attributes->class(["btn normal-case"]) }}>
                         {{ $label }}
                         <x-mary-icon :name="$icon" />
                     </summary>
@@ -52,7 +51,7 @@ class Dropdown extends Component
 
                 <ul
                     @class([
-                        'p-2','shadow','menu','z-[1]','border-[length:var(--border)]','border-base-content/10','bg-base-100', 'rounded-box','w-auto','min-w-max',
+                        'p-2','shadow','menu','z-[1]','border','border-base-200','bg-base-100','dark:bg-base-200','rounded-box','w-auto','min-w-max',
                         'dropdown-content' => $noXAnchor,
                     ])
                     @click="open = false"

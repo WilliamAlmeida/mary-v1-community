@@ -12,7 +12,6 @@ class TimelineItem extends Component
 
     public function __construct(
         public string $title,
-        public ?string $id = null,
         public ?string $subtitle = null,
         public ?string $description = null,
         public ?string $icon = null,
@@ -21,7 +20,7 @@ class TimelineItem extends Component
         public ?bool $last = false,
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function render(): View|Closure|string
@@ -59,7 +58,7 @@ class TimelineItem extends Component
 
                         <!-- SUBTITLE -->
                         @if($subtitle)
-                            <div class="text-xs text-base-content/30 font-bold">{{ $subtitle }}</div>
+                            <div class="text-xs text-gray-500/50 font-bold">{{ $subtitle }}</div>
                         @endif
 
                         <!-- DESCRIPTION -->

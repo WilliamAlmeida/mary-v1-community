@@ -11,12 +11,12 @@ class Progress extends Component
     public string $uuid;
 
     public function __construct(
-        public ?string $id = null,
         public ?float $value = 0,
         public ?float $max = 100,
         public ?bool $indeterminate = false,
+
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function render(): View|Closure|string

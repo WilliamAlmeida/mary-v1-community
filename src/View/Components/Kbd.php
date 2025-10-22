@@ -11,9 +11,9 @@ class Kbd extends Component
     public string $uuid;
 
     public function __construct(
-        public ?string $id = null,
+
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function render(): View|Closure|string

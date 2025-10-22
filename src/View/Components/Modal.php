@@ -46,25 +46,24 @@ class Modal extends Component
                 >
                     <div class="modal-box {{ $boxClass }}">
                         @if(!$persistent)
-                            <form method="dialog" tabindex="-1">
+                            <form method="dialog">
                                 @if ($id)
-                                    <x-mary-button class="btn-circle btn-sm btn-ghost absolute end-2 top-2 z-[999]" icon="o-x-mark" type="submit" tabindex="-1" />
+                                    <button class="btn btn-sm btn-circle border-0 shadow-none absolute end-2 top-2 font-bold text-xl z-[999] bg-base-100" type="submit">✕</button>
                                 @else
-                                    <x-mary-button class="btn-circle btn-sm btn-ghost absolute end-2 top-2 z-[999]" icon="o-x-mark" @click="$wire.{{ $attributes->wire('model')->value() }} = false" tabindex="-1" />
+                                    <button class="btn btn-sm btn-circle border-0 shadow-none absolute end-2 top-2 font-bold text-xl z-[999] bg-base-100" @click="$wire.{{ $attributes->wire('model')->value() }} = false" type="button">✕</button>
                                 @endif
                             </form>
                         @endif
-
                         @if($title)
-                            <x-mary-header :title="$title" :subtitle="$subtitle" size="text-xl" :separator="$separator" class="!mb-5" />
+                            <x-mary-header :title="$title" :subtitle="$subtitle" size="text-2xl" :separator="$separator" class="mb-5" />
                         @endif
 
-                        <div>
+                        <p class="">
                             {{ $slot }}
-                        </div>
+                        </p>
 
-                        @if($separator && $actions)
-                            <hr class="border-t-[length:var(--border)] border-base-content/10 mt-5" />
+                        @if($separator)
+                            <hr class="mt-5" />
                         @endif
 
                         @if($actions)

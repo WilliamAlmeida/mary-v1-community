@@ -11,7 +11,6 @@ class Card extends Component
     public string $uuid;
 
     public function __construct(
-        public ?string $id = null,
         public ?string $title = null,
         public ?string $subtitle = null,
         public ?bool $separator = false,
@@ -23,7 +22,7 @@ class Card extends Component
         public mixed $actions = null,
         public mixed $figure = null,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function progressTarget(): ?string
@@ -42,7 +41,7 @@ class Card extends Component
                     {{
                         $attributes
                             ->merge(['wire:key' => $uuid ])
-                            ->class(['card bg-base-100 rounded-lg p-5', 'shadow-xs' => $shadow])
+                            ->class(['card bg-base-100 rounded-lg p-5', 'shadow-sm' => $shadow])
                     }}
                 >
                     @if($figure)
@@ -56,12 +55,12 @@ class Card extends Component
                             <div class="flex justify-between items-center">
                                 <div>
                                     @if($title)
-                                        <div @class(["text-xl font-bold", is_string($title) ? '' : $title?->attributes->get('class') ]) >
+                                        <div @class(["text-2xl font-bold", is_string($title) ? '' : $title?->attributes->get('class') ]) >
                                             {{ $title }}
                                         </div>
                                     @endif
                                     @if($subtitle)
-                                    <div @class(["text-base-content/50 text-sm mt-1", is_string($subtitle) ? '' : $subtitle?->attributes->get('class') ]) >
+                                    <div @class(["text-gray-500 text-sm mt-1", is_string($subtitle) ? '' : $subtitle?->attributes->get('class') ]) >
                                             {{ $subtitle }}
                                         </div>
                                     @endif
@@ -73,12 +72,12 @@ class Card extends Component
                             </div>
 
                             @if($separator)
-                                <hr class="mt-3 border-t-[length:var(--border)] border-base-content/10" />
+                                <hr class="mt-3" />
 
                                 @if($progressIndicator)
                                     <div class="h-0.5 -mt-4 mb-4">
                                         <progress
-                                            class="progress progress-primary w-full h-0.5"
+                                            class="progress progress-primary w-full h-0.5 dark:h-1"
                                             wire:loading
 
                                             @if($progressTarget())
@@ -96,12 +95,10 @@ class Card extends Component
 
                     @if($actions)
                         @if($separator)
-                            <hr class="mt-5 border-t-[length:var(--border)] border-base-content/10" />
-                        @else
-                            <div></div>
+                            <hr class="mt-5" />
                         @endif
 
-                        <div class="flex justify-end gap-3 pt-5">
+                        <div class="flex justify-end gap-3 p-3">
                             {{ $actions }}
                         </div>
                     @endif

@@ -11,14 +11,11 @@ class Colorpicker extends Component
     public string $uuid;
 
     public function __construct(
-        public ?string $id = null,
         public ?string $label = null,
         public ?string $icon = '',
         public ?string $iconRight = null,
         public ?string $hint = null,
         public ?string $hintClass = 'label-text-alt text-gray-400 py-1 pb-0',
-        public ?string $prefix = null,
-        public ?string $suffix = null,
         public ?bool $inline = false,
         public ?bool $clearable = false,
 
@@ -29,18 +26,12 @@ class Colorpicker extends Component
         public ?bool $firstErrorOnly = false,
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function modelName(): ?string
     {
-        return $this->attributes->whereStartsWith('wire:model')->first()
-            ?? $this->attributes->whereStartsWith('x-model')->first();
-    }
-
-    public function isWireModel(): bool
-    {
-        return $this->attributes->whereStartsWith('wire:model')->first() !== null;
+        return $this->attributes->whereStartsWith('wire:model')->first();
     }
 
     public function errorFieldName(): ?string
@@ -48,22 +39,12 @@ class Colorpicker extends Component
         return $this->errorField ?? $this->modelName();
     }
 
-    public function isReadonly(): bool
-    {
-        return $this->attributes->has('readonly') && $this->attributes->get('readonly') == true;
-    }
-
-    public function isDisabled(): bool
-    {
-        return $this->attributes->has('disabled') && $this->attributes->get('disabled') == true;
-    }
-
     public function render(): View|Closure|string
     {
         return <<<'HTML'
             <div>
                 @php
-                    // We need this extra step to support models arrays. Ex: wire:model="emails.0"  , wire:model="emails.1"
+                    // Wee need this extra step to support models arrays. Ex: wire:model="emails.0"  , wire:model="emails.1"
                     $uuid = $uuid . $modelName()
                 @endphp
 
@@ -83,24 +64,24 @@ class Colorpicker extends Component
                 <div class="flex" x-data>
                     <div
                         @class([
-                                "rounded-s-lg rounded-e-lg flex items-center mr-2",
-                                "border border-e-0 px-4 cursor-pointer",
+                                "rounded-s-lg flex items-center",
+                                "border border-primary border-e-0 px-4 cursor-pointer",
                                 "focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary",
-                                "border-0 bg-base-300" => $isDisabled(),
-                                "border-dashed" => $isReadonly(),
+                                "border-0 bg-base-300" => $attributes->has('disabled') && $attributes->get('disabled') == true,
+                                "border-dashed" => $attributes->has('readonly') && $attributes->get('readonly') == true,
                                 "!border-error" => $errorFieldName() && $errors->has($errorFieldName()) && !$omitError
                             ])
 
                             x-on:click="$refs.colorpicker.click()"
-                            :style="{ backgroundColor: {{ $isWireModel() ? '$wire.' . $modelName() : $modelName() }} }"
+                            :style="{ backgroundColor: $wire.{{ $modelName() }} }"
                     >
                         <input
                             type="color"
                             class="cursor-pointer opacity-0 w-4"
                             x-ref="colorpicker"
                             x-on:click.stop=""
-                            {{ $attributes->has('wire:model') ? $attributes->wire('model') : $attributes->filter(fn ($value, $key) => $key === 'x-model') }}
-                            :style="{ backgroundColor: {{ $isWireModel() ? '$wire.' . $modelName() : $modelName() }} }"  />
+                            {{ $attributes->wire('model') }}
+                            :style="{ backgroundColor: $wire.{{ $modelName() }} }"  />
                     </div>
 
                     <div class="flex-1 relative">
@@ -116,7 +97,8 @@ class Colorpicker extends Component
                                         'ps-10' => ($icon),
                                         'h-14' => ($inline),
                                         'pt-3' => ($inline && $label),
-                                        'border border-dashed' => $isReadonly(),
+                                        'rounded-s-none',
+                                        'border border-dashed' => $attributes->has('readonly') && $attributes->get('readonly') == true,
                                         'input-error' => $errorFieldName() && $errors->has($errorFieldName()) && !$omitError
                                 ])
                             }}
@@ -129,11 +111,7 @@ class Colorpicker extends Component
 
                         <!-- CLEAR ICON  -->
                         @if($clearable)
-                            @if($isWireModel())
-                                <x-mary-icon @click="$wire.set('{{ $modelName() }}', '', {{ json_encode($attributes->wire('model')->hasModifier('live')) }})"  name="o-x-mark" class="absolute top-1/2 end-3 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600" />
-                            @else
-                                <x-mary-icon @click="{{ $modelName() }} = ''"  name="o-x-mark" class="absolute top-1/2 end-3 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600" />
-                            @endif
+                            <x-mary-icon @click="$wire.set('{{ $modelName() }}', '', {{ json_encode($attributes->wire('model')->hasModifier('live')) }})"  name="o-x-mark" class="absolute top-1/2 end-3 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600" />
                         @endif
 
                         <!-- RIGHT ICON  -->

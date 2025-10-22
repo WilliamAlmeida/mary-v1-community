@@ -12,13 +12,12 @@ class Pin extends Component
 
     public function __construct(
         public int $size,
-        public ?string $id = null,
         public ?bool $numeric = false,
         public ?bool $hide = false,
         public ?string $hideType = "disc",
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function modelName(): ?string
@@ -29,7 +28,7 @@ class Pin extends Component
     public function render(): View|Closure|string
     {
         return <<<'HTML'
-                <div>
+                <div {{ $attributes->except('wire:model') }}>
                     <div
                         x-data="{
                                 value: @entangle($attributes->wire('model')),
@@ -88,6 +87,7 @@ class Pin extends Component
                                     ])
                                     id="{{ $uuid }}-pin-{{ $i }}"
                                     type="text"
+                                    class="input input-primary !w-14 font-black text-2xl text-center"
                                     maxlength="1"
                                     x-model="inputs[{{ $i }}]"
                                     @keydown.space.prevent
@@ -96,10 +96,7 @@ class Pin extends Component
                                     @if($numeric)
                                         inputmode="numeric"
                                         x-mask="9"
-                                    @endif
-
-                                    {{ $attributes->whereDoesntStartWith('wire')->class(['input input-border !w-12 font-black text-xl text-center']) }}
-                                />
+                                    @endif />
                             @endforeach
                         </div>
                     </div>

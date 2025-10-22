@@ -11,24 +11,21 @@ class MenuSub extends Component
     public string $uuid;
 
     public function __construct(
-        public ?string $id = null,
         public ?string $title = null,
         public ?string $icon = null,
-        public ?string $iconClasses = null,
         public bool $open = false,
-        public ?bool $hidden = false,
-        public ?bool $disabled = false,
+        public ?bool $enabled = true,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function render(): View|Closure|string
     {
-        if ($this->hidden === true) {
+        if ($this->enabled === false) {
             return '';
         }
 
-        return <<<'BLADE'
+        return <<<'HTML'
                 @aware(['activeBgColor' => 'bg-base-300'])
 
                 @php
@@ -36,7 +33,6 @@ class MenuSub extends Component
                 @endphp
 
                 <li
-                @class(['menu-disabled' => $disabled])
                     x-data="
                     {
                         show: @if($submenuActive || $open) true @else false @endif,
@@ -53,19 +49,17 @@ class MenuSub extends Component
                     }"
                 >
                     <details :open="show" @if($submenuActive) open @endif @click.stop>
-                        <summary @click.prevent="toggle()" @class(["hover:text-inherit px-4 py-1.5 my-0.5 text-inherit", $activeBgColor => $submenuActive])>
+                        <summary @click.prevent="toggle()" @class(["hover:text-inherit text-inherit", $activeBgColor => $submenuActive])>
                             @if($icon)
-                                <x-mary-icon :name="$icon" @class(['inline-flex my-0.5', $iconClasses]) />
+                                <x-mary-icon :name="$icon" class="inline-flex"  />
                             @endif
-
-                            <span class="mary-hideable whitespace-nowrap truncate">{{ $title }}</span>
+                            <span class="mary-hideable">{{ $title }}</span>
                         </summary>
-
                         <ul class="mary-hideable">
                             {{ $slot }}
                         </ul>
                     </details>
                 </li>
-                BLADE;
+            HTML;
     }
 }

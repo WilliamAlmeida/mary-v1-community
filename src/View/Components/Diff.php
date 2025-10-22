@@ -12,13 +12,12 @@ class Diff extends Component
     public string $uuid;
 
     public function __construct(
-        public ?string $id = null,
         public string $old = '',
         public string $new = '',
         public string $fileName = 'payload.json',
         public ?array $config = []
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function setup(): string
@@ -34,7 +33,9 @@ class Diff extends Component
 
     public function diff(): string
     {
-        $diff = DiffHelper::calculate($this->old . PHP_EOL, $this->new . PHP_EOL);
+        $diff = DiffHelper::calculate($this->old . '
+', $this->new . '
+');
 
         return "--- {$this->fileName}\n+++ {$this->fileName}\n" . $diff;
     }
@@ -50,7 +51,7 @@ class Diff extends Component
                         }
                 }"
              >
-                <div x-ref="diff{{ $uuid }}" class="[&_.d2h-diff-table]:!text-xs [&_.d2h-file-header]:!bg-base-100 [&_.d2h-file-wrapper]:!border-dashed [&_.d2h-file-wrapper]:!border-[length:var(--border)] [&_.d2h-file-wrapper]:!bg-base-100 [&_.d2h-del]:!bg-red-50 [&_.d2h-ins]:!bg-green-50 [&_.d2h-code-line-ctn]:!whitespace-pre-wrap [&_.d2h-code-side-line]:!w-auto">
+                <div x-ref="diff{{ $uuid }}" class="[&_.d2h-diff-table]:text-xs [&_.d2h-file-header]:bg-base-100 [&_.d2h-file-wrapper]:border-dashed [&_.d2h-file-wrapper]:border [&_.d2h-file-wrapper]:bg-base-100 [&_.d2h-del]:bg-red-50 [&_.d2h-ins]:bg-green-50 [&_.d2h-code-line-ctn]:whitespace-pre-wrap [&_.d2h-code-side-line]:w-auto">
                 </div>
             </div>
         HTML;

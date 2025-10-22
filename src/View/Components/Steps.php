@@ -11,18 +11,16 @@ class Steps extends Component
     public string $uuid;
 
     public function __construct(
-        public ?string $id = null,
         public bool $vertical = false,
-        public ?string $stepsColor = 'step-neutral',
-        public ?string $stepperClasses = null
+        public ?string $stepsColor = 'step-primary'
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function render(): View|Closure|string
     {
-        return <<<'BLADE'
+        return <<<'HTML'
                 <div
                         x-data="{
                                 steps: [],
@@ -36,18 +34,9 @@ class Steps extends Component
                         }"
                     >
                         <!-- STEP LABELS -->
-                        <ul class="steps [&>*:nth-child(2)]:before:hidden {{ $stepperClasses }}">
+                        <ul class="steps">
                             <template x-for="(step, index) in steps" :key="index">
-                                <li
-                                    class="step"
-                                    :data-content="!step.icon ? step.dataContent || (index + 1) : ''"
-                                    :class="(index + 1 <= current) && '{{ $stepsColor }} ' + step.classes"
-                                >
-                                        <template x-if="step.icon">
-                                            <span x-html="step.icon" class="step-icon"></span>
-                                        </template>
-                                        <span x-html="step.text"></span>
-                                </li>
+                                <li x-html="step.text" :data-content="step.dataContent || (index + 1)" class="step" :class="(index + 1 <= current) && '{{ $stepsColor }} ' + step.classes"></li>
                             </template>
                         </ul>
 
@@ -57,8 +46,8 @@ class Steps extends Component
                         </div>
 
                         <!-- Force Tailwind compile steps color -->
-                        <span class="hidden step-primary step-error step-success step-neutral step-info step-accent"></span>
+                        <span class="hidden step-primary step-error step-neutral step-info step-accent"></span>
                     </div>
-            BLADE;
+            HTML;
     }
 }

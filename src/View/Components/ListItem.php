@@ -12,7 +12,6 @@ class ListItem extends Component
 
     public function __construct(
         public object|array $item,
-        public ?string $id = null,
         public string $avatar = 'avatar',
         public string $value = 'name',
         public ?string $subValue = '',
@@ -23,7 +22,7 @@ class ListItem extends Component
         // Slots
         public mixed $actions = null,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function render(): View|Closure|string
@@ -33,7 +32,7 @@ class ListItem extends Component
                 <div
                     {{ $attributes->class([
                             "flex justify-start items-center gap-4 px-3",
-                            "hover:bg-base-200" => !$noHover,
+                            "hover:bg-base-200/50" => !$noHover,
                             "cursor-pointer" => $link
                         ])
                     }}
@@ -78,7 +77,7 @@ class ListItem extends Component
                                 {{ is_string($value) ? data_get($item, $value) : $value }}
                             </div>
 
-                            <div @if(!is_string($subValue))  {{ $subValue->attributes->class(["text-base-content/50 text-sm truncate"]) }} @else class="text-base-content/50 text-sm truncate" @endif>
+                            <div @if(!is_string($subValue))  {{ $subValue->attributes->class(["text-gray-400 text-sm truncate"]) }} @else class="text-gray-400 text-sm truncate" @endif>
                                 {{ is_string($subValue) ? data_get($item, $subValue) : $subValue }}
                             </div>
                         </div>
@@ -104,7 +103,7 @@ class ListItem extends Component
                 </div>
 
                 @if(!$noSeparator)
-                    <hr class="border-t-[length:var(--border)] border-base-content/10"/>
+                    <hr class="border-base-300"/>
                 @endif
             </div>
         HTML;

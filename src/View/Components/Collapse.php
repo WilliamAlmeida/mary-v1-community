@@ -11,7 +11,6 @@ class Collapse extends Component
     public string $uuid;
 
     public function __construct(
-        public ?string $id = null,
         public ?string $name = null,
         public ?bool $collapsePlusMinus = false,
         public ?bool $separator = false,
@@ -21,7 +20,7 @@ class Collapse extends Component
         public mixed $heading = null,
         public mixed $content = null,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "mary" . md5(serialize($this));
     }
 
     public function render(): View|Closure|string
@@ -32,7 +31,7 @@ class Collapse extends Component
                 <div
                     {{
                         $attributes->class([
-                            'collapse border-[length:var(--border)] border-base-content/10',
+                            'collapse border border-base-300',
                             'join-item' => !$noJoin,
                             'collapse-arrow' => !$collapsePlusMinus && !$noIcon,
                             'collapse-plus' => $collapsePlusMinus && !$noIcon
@@ -49,7 +48,7 @@ class Collapse extends Component
                         @endif
 
                         <div
-                            {{ $heading->attributes->merge(["class" => "collapse-title font-semibold"]) }}
+                            {{ $heading->attributes->merge(["class" => "collapse-title text-xl font-medium"]) }}
 
                             @if(isset($noJoin))
                                 :class="model == '{{ $name }}' && 'z-10'"
@@ -58,9 +57,9 @@ class Collapse extends Component
                         >
                             {{ $heading }}
                         </div>
-                        <div {{ $content->attributes->merge(["class" => "collapse-content text-sm"]) }} wire:key="content-{{ $uuid }}">
+                        <div {{ $content->attributes->merge(["class" => "collapse-content"]) }} wire:key="content-{{ $uuid }}">
                             @if($separator)
-                                <hr class="mb-3 border-t-[length:var(--border)] border-base-content/10" />
+                                <hr class="mb-3" />
                             @endif
 
                             {{ $content }}
