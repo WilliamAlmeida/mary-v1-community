@@ -1,15 +1,15 @@
 {
-    "name": "robsontenorio/mary",
-    "description": "Gorgeous UI components for Livewire powered by daisyUI and Tailwind",
+    "name": "williamalmeida/mary-v1-community",
+    "description": "Mary UI Community Edition - UI components for Livewire, daisyUI and Tailwind (forked and maintained by William Almeida)",
     "license": "MIT",
     "authors": [
         {
-            "name": "Robson Tenório",
-            "email": "rrtenorio@gmail.com",
-            "homepage": "https://github.com/robsontenorio"
+            "name": "William Almeida",
+            "email": "william@wmst.com.br",
+            "homepage": "https://wmst.com.br"
         }
     ],
-    "homepage": "https://mary-ui.com",
+    "homepage": "https://github.com/WilliamAlmeida/mary-v1-community",
     "keywords": [
         "laravel",
         "livewire",
