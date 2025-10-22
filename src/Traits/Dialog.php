@@ -48,41 +48,112 @@ trait Dialog
     }
 
     /**
-     * Show a dialog with a specific type
+     * Show a success dialog
      *
-     * @param string $type
      * @param string|null $title
      * @param string|null $description
      * @param string|null $position
      * @param array|null $confirmOptions
      * @param array|null $cancelOptions
+     * @param string|null $icon
      * @return void
      */
-    public function dialogWithType(
-        string $type,
+    public function dialogSuccess(
         ?string $title = null,
         ?string $description = null,
         ?string $position = null,
         ?array $confirmOptions = ['text' => 'Ok'],
         ?array $cancelOptions = null,
-        ?string $icon = null,
+        ?string $icon = 'o-check-circle',
     ): void {
-        $defaultIcons = [
-            'success' => 'o-check-circle',
-            'error' => 'o-x-circle',
-            'info' => 'o-information-circle',
-            'warning' => 'o-exclamation-triangle',
-            'confirm' => 'o-question-mark-circle',
-        ];
+        $this->dialog($title, $description, $position, $confirmOptions, $cancelOptions, $icon, 'dialog-success');
+    }
 
-        $this->dialog(
-            $title,
-            $description,
-            $position,
-            $confirmOptions,
-            $cancelOptions,
-            $icon ?? $defaultIcons[$type] ?? 'o-information-circle',
-            "dialog-$type"
-        );
+    /**
+     * Show an error dialog
+     *
+     * @param string|null $title
+     * @param string|null $description
+     * @param string|null $position
+     * @param array|null $confirmOptions
+     * @param array|null $cancelOptions
+     * @param string|null $icon
+     * @return void
+     */
+    public function dialogError(
+        ?string $title = null,
+        ?string $description = null,
+        ?string $position = null,
+        ?array $confirmOptions = ['text' => 'Ok'],
+        ?array $cancelOptions = null,
+        ?string $icon = 'o-x-circle',
+    ): void {
+        $this->dialog($title, $description, $position, $confirmOptions, $cancelOptions, $icon, 'dialog-error');
+    }
+
+    /**
+     * Show an info dialog
+     *
+     * @param string|null $title
+     * @param string|null $description
+     * @param string|null $position
+     * @param array|null $confirmOptions
+     * @param array|null $cancelOptions
+     * @param string|null $icon
+     * @return void
+     */
+    public function dialogInfo(
+        ?string $title = null,
+        ?string $description = null,
+        ?string $position = null,
+        ?array $confirmOptions = ['text' => 'Ok'],
+        ?array $cancelOptions = null,
+        ?string $icon = 'o-information-circle',
+    ): void {
+        $this->dialog($title, $description, $position, $confirmOptions, $cancelOptions, $icon, 'dialog-info');
+    }
+
+    /**
+     * Show a warning dialog
+     *
+     * @param string|null $title
+     * @param string|null $description
+     * @param string|null $position
+     * @param array|null $confirmOptions
+     * @param array|null $cancelOptions
+     * @param string|null $icon
+     * @return void
+     */
+    public function dialogWarning(
+        ?string $title = null,
+        ?string $description = null,
+        ?string $position = null,
+        ?array $confirmOptions = ['text' => 'Ok'],
+        ?array $cancelOptions = null,
+        ?string $icon = 'o-exclamation-triangle',
+    ): void {
+        $this->dialog($title, $description, $position, $confirmOptions, $cancelOptions, $icon, 'dialog-warning');
+    }
+
+    /**
+     * Show a confirmation dialog with confirm and cancel options
+     *
+     * @param string|null $title
+     * @param string|null $description
+     * @param string|null $position
+     * @param array|null $confirmOptions
+     * @param array|null $cancelOptions
+     * @param string|null $icon
+     * @return void
+     */
+    public function dialogConfirm(
+        ?string $title = null,
+        ?string $description = null,
+        ?string $position = null,
+        ?array $confirmOptions = ['text' => 'Ok'],
+        ?array $cancelOptions = ['text' => 'Cancel'],
+        ?string $icon = 'o-question-mark-circle',
+    ): void {
+        $this->dialog($title, $description, $position, $confirmOptions, $cancelOptions, $icon, 'dialog-confirm');
     }
 }
