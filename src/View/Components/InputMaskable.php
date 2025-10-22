@@ -123,7 +123,7 @@ class InputMaskable extends Component
                             x-ref="maskedInput"
                             x-mask="{{ $mask }}"
                             inputmode="{{ preg_match('/[a-zA-Z]/', $mask) ? 'text' : 'numeric' }}"
-                            @input="$wire.set('{{ $modelName() }}', {{ $emitFormatted ? '$event.target.value' : '$event.target.value.replace(/[^0-9a-zA-Z]/g, '')' }}, {{ json_encode($attributes->wire('model')->hasModifier('live')) }})"
+                            @input="$wire.set('{{ $modelName() }}', {{ $emitFormatted ? '$event.target.value' : "\$event.target.value.replace(/[^0-9a-zA-Z]/g, '')" }}, {{ json_encode($attributes->wire('model')->hasModifier('live')) }})"
                         @endif
 
                         {{
