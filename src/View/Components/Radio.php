@@ -15,6 +15,7 @@ class Radio extends Component
         public ?string $label = null,
         public ?string $hint = null,
         public ?string $hintClass = 'label-text-alt text-gray-400 ps-1 mt-2',
+        public ?string $joinClass = null,
         public ?string $optionValue = 'id',
         public ?string $optionLabel = 'name',
         public Collection|array $options = new Collection(),
@@ -53,7 +54,7 @@ class Radio extends Component
                         </div>
                     @endif
 
-                    <div class="join">
+                    <div class="join {{ $joinClass }}">
                         @foreach ($options as $option)
                             <input
                                 type="radio"
