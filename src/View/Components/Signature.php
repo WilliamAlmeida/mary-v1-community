@@ -71,7 +71,7 @@ class Signature extends Component
                             },
                             clear() {
                                 this.signature.clear();
-                                this.extract();
+                                this.value = null;
                             }
                          }"
 
