@@ -25,7 +25,7 @@ class ToastException extends Exception
 
     protected bool $preventDefault = true;
 
-    protected bool $noProgress = false;
+    protected bool $noProgress = true;
 
     protected ?string $progressClass = null;
 
@@ -37,7 +37,7 @@ class ToastException extends Exception
         string $icon = 'o-information-circle',
         string $css = 'alert-info',
         int $timeout = 3000,
-        bool $noProgress = false,
+        bool $noProgress = true,
         ?string $progressClass = null
     ): self {
         $instance = new self(message: $title, code: 500);
@@ -62,7 +62,7 @@ class ToastException extends Exception
         string $icon = 'o-information-circle',
         string $css = 'alert-info',
         int $timeout = 3000,
-        bool $noProgress = false,
+        bool $noProgress = true,
         ?string $progressClass = null
     ): self {
         return self::typedMessage(
@@ -85,7 +85,7 @@ class ToastException extends Exception
         string $icon = 'o-check-circle',
         string $css = 'alert-success',
         int $timeout = 3000,
-        bool $noProgress = false,
+        bool $noProgress = true,
         ?string $progressClass = null
     ): self {
         return self::typedMessage(
@@ -108,7 +108,7 @@ class ToastException extends Exception
         string $icon = 'o-x-circle',
         string $css = 'alert-error',
         int $timeout = 3000,
-        bool $noProgress = false,
+        bool $noProgress = true,
         ?string $progressClass = null
     ): self {
         return self::typedMessage(
@@ -131,7 +131,7 @@ class ToastException extends Exception
         string $icon = 'o-exclamation-triangle',
         string $css = 'alert-warning',
         int $timeout = 3000,
-        bool $noProgress = false,
+        bool $noProgress = true,
         ?string $progressClass = null
     ): self {
         return self::typedMessage(

@@ -14,7 +14,7 @@ trait Toast
         string $icon = 'o-information-circle',
         string $css = 'alert-info',
         int $timeout = 3000,
-        bool $noProgress = false,
+        bool $noProgress = true,
         ?string $progressClass = null,
         ?string $redirectTo = null
     ) {
@@ -47,7 +47,7 @@ trait Toast
         string $icon = 'o-check-circle',
         string $css = 'alert-success',
         int $timeout = 3000,
-        bool $noProgress = false,
+        bool $noProgress = true,
         ?string $progressClass = null,
         ?string $redirectTo = null
     ) {
@@ -61,7 +61,7 @@ trait Toast
         string $icon = 'o-exclamation-triangle',
         string $css = 'alert-warning',
         int $timeout = 3000,
-        bool $noProgress = false,
+        bool $noProgress = true,
         ?string $progressClass = null,
         ?string $redirectTo = null
     ) {
@@ -75,7 +75,7 @@ trait Toast
         string $icon = 'o-x-circle',
         string $css = 'alert-error',
         int $timeout = 3000,
-        bool $noProgress = false,
+        bool $noProgress = true,
         ?string $progressClass = null,
         ?string $redirectTo = null
     ) {
@@ -89,7 +89,7 @@ trait Toast
         string $icon = 'o-information-circle',
         string $css = 'alert-info',
         int $timeout = 3000,
-        bool $noProgress = false,
+        bool $noProgress = true,
         ?string $progressClass = null,
         ?string $redirectTo = null
     ) {
