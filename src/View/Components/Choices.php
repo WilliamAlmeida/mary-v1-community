@@ -19,6 +19,7 @@ class Choices extends Component
         public ?string $hintClass = 'label-text-alt text-gray-400 py-1 pb-0',
 
         public ?bool $searchable = false,
+        public ?bool $noProgress = false,
         public ?bool $single = false,
         public ?bool $compact = false,
         public ?string $compactText = 'selected',
@@ -328,7 +329,9 @@ class Choices extends Component
                             <div wire:key="options-list-{{ $uuid }}" class="{{ $height }} w-full absolute z-10 shadow-xl bg-base-100 border border-base-300 rounded-lg cursor-pointer overflow-y-auto" x-anchor.bottom-start="$refs.container">
 
                                 <!-- PROGRESS -->
-                                <progress wire:loading wire:target="{{ preg_replace('/\((.*?)\)/', '', $searchFunction) }}" class="progress absolute progress-primary top-0 h-0.5"></progress>
+                                 @if(!$noProgress)
+                                    <progress wire:loading wire:target="{{ preg_replace('/\((.*?)\)/', '', $searchFunction) }}" class="progress absolute progress-primary top-0 h-0.5"></progress>
+                                @endif
 
                                <!-- SELECT ALL -->
                                @if($allowAll)
