@@ -101,7 +101,7 @@ class Input extends Component
                     {{-- MONEY SETUP --}}
                     @if($money)
                         <div
-                            wire:key="money-{{ rand() }}"
+                            wire:key="money-{{ $uuid }}"
                             x-data="{ amount: $wire.get('{{ $modelName() }}') }" x-init="$nextTick(() => new Currency($refs.myInput, {{ $moneySettings() }}))"
                         >
                     @endif
