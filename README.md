@@ -117,6 +117,25 @@ module.exports = {
 }
 ```
 
+Tip: se você está desenvolvendo localmente usando um repositório `path` (link simbólico via `composer`), inclua também o caminho para a cópia local do pacote para que o Vite/Tailwind detectem as classes durante o desenvolvimento. Exemplo com ambas as opções:
+
+```js
+module.exports = {
+    content: [
+        // arquivos da sua app
+        './resources/js/**/*.js',
+        './resources/views/**/*.blade.php',
+
+        // quando o pacote está instalado via Composer
+        './vendor/williamalmeida/mary-v1-community/src/View/Components/**/*.php',
+
+        // quando estiver usando o pacote localmente via `repositories.type = path`
+        '../mary-v1-community/src/View/Components/**/*.php',
+    ],
+}
+```
+
+Isso garante que o Tailwind processe as classes usadas por `<x-color-palette>` (e outros componentes do pacote) tanto em instalações via `vendor` quanto em desenvolvimento local.
 
 ## Color Palette component
 
