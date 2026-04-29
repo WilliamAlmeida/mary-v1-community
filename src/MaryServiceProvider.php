@@ -67,6 +67,7 @@ use Mary\View\Components\Spotlight;
 use Mary\View\Components\DatePicker;
 use Mary\View\Components\Pagination;
 use Illuminate\Support\Facades\Blade;
+use Mary\View\Components\ColorPalette;
 use Mary\View\Components\Colorpicker;
 use Mary\View\Components\SelectGroup;
 use Mary\View\Components\ThemeToggle;
@@ -136,6 +137,7 @@ class MaryServiceProvider extends ServiceProvider
         Blade::component($prefix . 'choices-offline', ChoicesOffline::class);
         Blade::component($prefix . 'code', Code::class);
         Blade::component($prefix . 'collapse', Collapse::class);
+        Blade::component($prefix . 'color-palette', ColorPalette::class);
         Blade::component($prefix . 'colorpicker', Colorpicker::class);
         Blade::component($prefix . 'datepicker', DatePicker::class);
         Blade::component($prefix . 'datetime', DateTime::class);
